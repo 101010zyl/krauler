@@ -1,9 +1,12 @@
 // krauler/src/main.cpp
 
 #include <curl/curl.h>
+#include <cxxopts/cxxopts.hpp>
 #include <gumbo.h>
 #include <iostream>
+#include <krauler/config.hpp>
 #include <set>
+#include <spdlog/spdlog.h>
 #include <string>
 
 // Write callback for libcurl
@@ -31,7 +34,9 @@ void extract_links(GumboNode* node, std::set<std::string>& links) {
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    krauler::Config config = krauler::parse_args(argc, argv);
+
     CURL*       curl;
     CURLcode    res;
     std::string response;
@@ -40,7 +45,7 @@ int main() {
     curl = curl_easy_init();
 
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://www.tacomaworld.com/");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
