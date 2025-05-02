@@ -1,0 +1,35 @@
+# .clang-format for compact K&R-style brace placement
+
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+PointerAlignment: Left
+SpacesBeforeTrailingComments: 1
+SpaceAfterCStyleCast: true
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
+SortIncludes: true
+IncludeBlocks: Regroup
+Cpp11BracedListStyle: true
+AlwaysBreakTemplateDeclarations: Yes
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignOperands: true
+ReflowComments: true
+
+BreakBeforeBraces: Attach  # <<< 修改为 K&R 风格，不换行
+
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false

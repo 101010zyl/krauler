@@ -1,0 +1,23 @@
+{
+    // 使用 clangd 作为 C/C++ 的语言服务器
+    "C_Cpp.intelliSenseEngine": "disabled", // 关闭默认的 Microsoft 插件
+    "clangd.path": "/usr/bin/clangd",       // 或 clangd-15，取决于你的版本
+
+    // 自动格式化
+    "editor.formatOnSave": true,
+
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+
+    // clangd 启动参数（可选但推荐）
+    "clangd.arguments": [
+        "--header-insertion=never",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--fallback-style=none"
+    ]
+}
