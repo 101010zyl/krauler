@@ -1,0 +1,10 @@
+version: '3'
+services:
+  krauler-dev:
+    build: .
+    container_name: krauler-dev
+    volumes:
+      - .:/home/devuser/krauler
+    working_dir: /home/devuser/krauler
+    stdin_open: true
+    tty: true
