@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(krauler LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(EXPORT_COMPILE_COMMANDS ON)
 
 find_package(CURL REQUIRED)
