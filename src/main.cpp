@@ -7,6 +7,5 @@ int main(int argc, char* argv[]) {
     krauler::Config  config = krauler::parse_args(argc, argv);
     krauler::Krauler krauler(config);
     krauler.start();
-
     return 0;
 }

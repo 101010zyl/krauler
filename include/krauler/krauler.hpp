@@ -1,5 +1,7 @@
 #pragma once
 #include "krauler/config.hpp"
+#include "krauler/html_parser.hpp"
+#include "krauler/http_client.hpp"
 
 #include <curl/curl.h>
 #include <gumbo.h>

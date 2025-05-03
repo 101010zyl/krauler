@@ -13,6 +13,8 @@ add_executable(krauler src/main.cpp)
 target_sources(krauler PRIVATE 
     src/config.cpp
     src/krauler.cpp
+    src/http_client.cpp
+    src/html_parser.cpp
 )
 target_link_libraries(krauler PRIVATE 
     CURL::libcurl 
