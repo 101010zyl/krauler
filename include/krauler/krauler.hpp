@@ -1,5 +1,6 @@
 #pragma once
 #include "krauler/config.hpp"
+#include "krauler/filter.hpp"
 #include "krauler/html_parser.hpp"
 #include "krauler/http_client.hpp"
 #include "krauler/robots.hpp"
@@ -50,7 +51,7 @@ class Krauler {
     }
 
     // Start crawling
-    void start();
+    void run();
 
   private:
     Config config_; // Configuration object

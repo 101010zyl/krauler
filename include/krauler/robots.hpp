@@ -9,9 +9,9 @@ namespace krauler {
 class Robotstxt {
   public:
     Robotstxt(const std::string& url);
-    bool can_fetch(const std::string& user_agent, const std::string& url);
     void parse_robots(const std::string& robots_txt);
     void parse_sitemap();
+    friend class Filter;
 
   private:
     std::string                                                      base_url_;

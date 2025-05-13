@@ -56,20 +56,4 @@ void Robotstxt::parse_sitemap() {
     }
 }
 
-bool Robotstxt::can_fetch(const std::string& user_agent, const std::string& url) {
-    // Check if the URL is disallowed for the given user agent
-    auto rules = disallowed_.find(user_agent);
-    if (rules == disallowed_.end()) {
-        spdlog::info("User-agent {} not found in robots.txt", user_agent);
-        return true; // No rules for this user agent, allow access
-    }
-    // Check if the URL matches any disallowed paths
-    spdlog::info("Checking URL: {}", url);
-    if (url.find(base_url_) != 0) {
-        spdlog::info("URL {} does not start with base URL {}", url, base_url_);
-        return true; // URL does not match base URL, allow access
-    }
-    return true; // URL is allowed
-}
-
 } // namespace krauler

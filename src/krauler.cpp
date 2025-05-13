@@ -5,15 +5,15 @@
 
 namespace krauler {
 
-void Krauler::start() {
+void Krauler::run() {
     try {
         std::string url = config_.url;
 
         std::string html = krauler::fetch_url(url);
         spdlog::info("Fetched {} bytes from {}", html.size(), url);
 
-        // Check robot.txt
         Robotstxt robotstxt(url);
+        Filter    filter(config_, robotstxt, visited_urls_);
 
         url_queue_.push(url);
         while ((!url_queue_.empty()) || saved_urls_.size() > 10) {
@@ -28,7 +28,7 @@ void Krauler::start() {
             auto links = krauler::extract_links(html);
             for (const auto& link : links) {
                 if (visited_urls_.find(link) == visited_urls_.end()) {
-                    if (robotstxt.can_fetch("*", link)) {
+                    if (filter.is_allowed(link)) {
                         spdlog::info("Crawling {}", link);
                     } else {
                         spdlog::warn("Blocked by robots.txt: {}", link);

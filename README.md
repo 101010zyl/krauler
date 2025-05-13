@@ -1,4 +1,7 @@
 # Krauler
+
+A simple crawler in modern C++.
+
 TODO: docker
 ## Dependencies
 ```
