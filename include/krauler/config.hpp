@@ -6,11 +6,12 @@
 
 namespace krauler {
 struct Config {
-    std::string url       = nullptr; // Starting URL
-    int         max_depth = 1;       // Max crawl depth
-    bool        verbose   = true;    // Enable verbose output
-    bool        help      = false;   // Print help
-    bool        ethical   = true;    // Ethical crawling
+    std::string url        = nullptr;  // Starting URL
+    int         max_depth  = 1;        // Max crawl depth
+    bool        verbose    = true;     // Enable verbose output
+    bool        help       = false;    // Print help
+    bool        ethical    = true;     // Ethical crawling
+    std::string output_dir = "output"; // Output directory
 
     Config() = default;
     Config(const cxxopts::ParseResult& result)
@@ -44,6 +45,17 @@ struct Config {
             spdlog::info("Ethical crawling enabled");
         } else {
             spdlog::warn("Ethical crawling disabled");
+        }
+
+        // make output dir
+        if (!std::filesystem::exists(output_dir)) {
+            std::filesystem::create_directory(output_dir);
+            spdlog::info("Created output directory: {}", output_dir);
+        } else {
+            spdlog::info("Output directory already exists: {}, clearing", output_dir);
+            for (const auto& entry : std::filesystem::directory_iterator(output_dir)) {
+                std::filesystem::remove_all(entry.path());
+            }
         }
     }
 };

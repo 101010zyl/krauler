@@ -1,5 +1,6 @@
 #include "krauler/config.hpp"
 
+#include <filesystem>
 #include <iostream>
 
 namespace krauler {
@@ -20,6 +21,7 @@ Config parse_args(int argc, char* argv[]) {
             std::cout << options.help() << std::endl;
             std::exit(0);
         }
+
         return Config(result);
     } catch (const cxxopts::exceptions::exception& e) {
         std::cerr << "Error parsing options: " << e.what() << std::endl;

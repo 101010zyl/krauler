@@ -1,23 +1,62 @@
 #include "krauler/krauler.hpp"
 
+#include <fstream>
 #include <spdlog/spdlog.h>
 
 namespace krauler {
 
 void Krauler::start() {
     try {
-        std::string url  = config_.url;
+        std::string url = config_.url;
+
         std::string html = krauler::fetch_url(url);
         spdlog::info("Fetched {} bytes from {}", html.size(), url);
 
-        auto links = krauler::extract_links(html);
-        spdlog::info("Extracted {} links", links.size());
-        std::cout << "Extracted " << links.size() << " links\n";
-        for (const auto& link : links) {
-            spdlog::info("Link: {}", link);
+        // Check robot.txt
+        Robotstxt robotstxt(url);
+
+        url_queue_.push(url);
+        while ((!url_queue_.empty()) || saved_urls_.size() > 10) {
+            auto url = url_queue_.front();
+            url_queue_.pop();
+            auto html = krauler::fetch_url(url);
+            visited_urls_.insert(url);
+            save_html(url, html);
+            saved_urls_.insert(url);
+            save_html(url, html);
+
+            auto links = krauler::extract_links(html);
+            for (const auto& link : links) {
+                if (visited_urls_.find(link) == visited_urls_.end()) {
+                    if (robotstxt.can_fetch("*", link)) {
+                        spdlog::info("Crawling {}", link);
+                    } else {
+                        spdlog::warn("Blocked by robots.txt: {}", link);
+                        visited_urls_.insert(link);
+                        continue;
+                    }
+                    url_queue_.push(link);
+                    spdlog::info("Added {} to queue", link);
+                } else {
+                    spdlog::debug("Already visited or saved {}", link);
+                }
+            }
         }
+
     } catch (const std::exception& e) {
         spdlog::error("Error: {}", e.what());
+    }
+}
+void Krauler::save_html(const std::string& url, const std::string& html) {
+    // Save the HTML content to a file or database
+    std::string   filename = config_.output_dir + "/" + url + ".html";
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        file << html;
+        file.close();
+        spdlog::info("Saved HTML to {}", filename);
+    } else {
+        spdlog::error("Failed to save HTML to {}", filename);
     }
 }
 } // namespace krauler
