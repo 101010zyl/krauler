@@ -28,5 +28,33 @@ std::set<std::string> extract_links(const std::string& html) {
     gumbo_destroy_output(&kGumboDefaultOptions, output);
     return links;
 }
+std::string url_join(const std::string& base, const std::string& path) {
+    std::string result = base;
+
+    // 处理 base: 确保不以多个 / 结尾
+    while (!result.empty() && result.back() == '/')
+        result.pop_back();
+
+    // 处理 path: 去除前导的多个 /
+    size_t path_start = 0;
+    while (path_start < path.size() && path[path_start] == '/')
+        ++path_start;
+
+    // 加入 /
+    result += "/";
+    result += path.substr(path_start);
+
+    return result;
+}
+
+std::string normalize_url(const std::string& hostname, const std::string& relative_url) {
+    if (relative_url.empty()) {
+        return hostname;
+    }
+    if (relative_url[0] == '/') {
+        return hostname + relative_url;
+    }
+    return hostname + "/" + relative_url;
+}
 
 } // namespace krauler

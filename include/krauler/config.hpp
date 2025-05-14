@@ -6,12 +6,13 @@
 
 namespace krauler {
 struct Config {
-    std::string url        = nullptr;  // Starting URL
-    int         max_depth  = 1;        // Max crawl depth
-    bool        verbose    = true;     // Enable verbose output
-    bool        help       = false;    // Print help
-    bool        ethical    = true;     // Ethical crawling
-    std::string output_dir = "output"; // Output directory
+    std::string url        = nullptr;       // Starting URL
+    int         max_depth  = 1;             // Max crawl depth
+    bool        verbose    = true;          // Enable verbose output
+    bool        help       = false;         // Print help
+    bool        ethical    = true;          // Ethical crawling
+    std::string output_dir = "output";      // Output directory
+    std::string user_agent = "Krauler/1.0"; // User agent
 
     Config() = default;
     Config(const cxxopts::ParseResult& result)

@@ -18,6 +18,11 @@ Robotstxt::Robotstxt(const std::string& url) : base_url_(url) {
     }
 }
 
+std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t");
+    size_t end   = s.find_last_not_of(" \t");
+    return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
+}
 void Robotstxt::parse_robots(const std::string& robots_txt) {
     std::istringstream stream(robots_txt);
     std::string        line;
@@ -25,11 +30,11 @@ void Robotstxt::parse_robots(const std::string& robots_txt) {
     while (std::getline(stream, line)) {
         // spdlog::info("Parsing line: {}", line);
         if (line.find("User-agent:") == 0) {
-            user_agent              = line.substr(11);
+            user_agent              = trim(line.substr(11));
             disallowed_[user_agent] = {};
         } else if (line.find("Disallow:") == 0) {
             if (!user_agent.empty()) {
-                std::string path = line.substr(9);
+                std::string path = trim(line.substr(9));
                 disallowed_[user_agent].insert(path);
             }
         } else if (line.find("Sitemap:") == 0) {
