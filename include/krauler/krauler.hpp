@@ -67,7 +67,7 @@ class Krauler {
     // boost::lockfree::queue<HtmlJob> html_queue_;      // Queue for URLs to crawl
     // boost::lockfree::queue<UrlJob>  extracted_queue_; // Queue for links to crawl
 
-    void save_html(const std::string& url, const std::string& html);
+    bool save_html(const std::string& url, const std::string& html);
 };
 
 } // namespace krauler

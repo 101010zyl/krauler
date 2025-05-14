@@ -16,15 +16,17 @@ void Krauler::run() {
         Filter    filter(config_, robotstxt, visited_urls_);
 
         url_queue_.push(url);
-        while ((!url_queue_.empty()) && saved_urls_.size() < 10) {
+        while ((!url_queue_.empty()) && saved_urls_.size() < 100) {
             auto url = url_queue_.front();
             url_queue_.pop();
-            auto html = krauler::fetch_url(url);
+            // spdlog::debug("Processing URL: {}", url);
+            auto html_content = krauler::fetch_url(url);
             visited_urls_.insert(url);
-            save_html(url, html);
-            saved_urls_.insert(url);
+            if (save_html(url, html_content)) {
+                saved_urls_.insert(url);
+            } 
 
-            auto links = krauler::extract_links(html);
+            auto links = krauler::extract_links(html_content);
             for (const auto& link : links) {
                 // spdlog::debug("New link: {}", link);
                 std::string normalized_link = normalize_url(config_.url, link);
@@ -41,16 +43,20 @@ void Krauler::run() {
         spdlog::error("Error: {}", e.what());
     }
 }
-void Krauler::save_html(const std::string& url, const std::string& html) {
-    // Save the HTML content to a file or database
-    std::string   filename = config_.output_dir + "/" + url + ".html";
+bool Krauler::save_html(const std::string& url, const std::string& html) {
+    // Sanitize the URL to create a valid filename
+    std::string sanitized_filename = sanitize_url_for_filename(url);
+    std::string filename           = config_.output_dir + "/" + sanitized_filename + ".html";
+
     std::ofstream file(filename);
     if (file.is_open()) {
         file << html;
         file.close();
         spdlog::info("Saved HTML to {}", filename);
+        return true;
     } else {
         spdlog::error("Failed to save HTML to {}", filename);
+        return false;
     }
 }
 } // namespace krauler
