@@ -29,6 +29,9 @@ std::set<std::string> extract_links(const std::string& html) {
     return links;
 }
 std::string url_join(const std::string& base, const std::string& path) {
+    if (path.empty() || path == "/") {
+        return base;
+    }
     std::string result = base;
 
     // 处理 base: 确保不以多个 / 结尾
@@ -48,13 +51,18 @@ std::string url_join(const std::string& base, const std::string& path) {
 }
 
 std::string normalize_url(const std::string& hostname, const std::string& relative_url) {
-    if (relative_url.empty()) {
-        return hostname;
-    }
     if (relative_url[0] == '/') {
-        return hostname + relative_url;
+        return url_join(hostname, relative_url);
     }
-    return hostname + "/" + relative_url;
+    if (relative_url.starts_with("http://") or relative_url.starts_with("https://")) {
+        return relative_url;
+    }
+    // delete # and everything after it
+    if (relative_url.find('#') != std::string::npos) {
+        std::string new_relative_url = relative_url.substr(0, relative_url.find('#'));
+        return url_join(hostname, new_relative_url);
+    }
+    return url_join(hostname, relative_url);
 }
 
 } // namespace krauler

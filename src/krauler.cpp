@@ -16,26 +16,26 @@ void Krauler::run() {
         Filter    filter(config_, robotstxt, visited_urls_);
 
         url_queue_.push(url);
-        // while ((!url_queue_.empty()) && visited_urls_.size() < 10) {
-        //     auto url = url_queue_.front();
-        //     url_queue_.pop();
-        //     auto html = krauler::fetch_url(url);
-        //     visited_urls_.insert(url);
-        //     save_html(url, html);
-        //     saved_urls_.insert(url);
+        while ((!url_queue_.empty()) && saved_urls_.size() < 10) {
+            auto url = url_queue_.front();
+            url_queue_.pop();
+            auto html = krauler::fetch_url(url);
+            visited_urls_.insert(url);
+            save_html(url, html);
+            saved_urls_.insert(url);
 
-        //     auto links = krauler::extract_links(html);
-        //     for (const auto& link : links) {
-        //         // spdlog::debug("New link: {}", link);
-        //         if (filter.is_allowed(link)) {
-        //             url_queue_.push(link);
-        //             spdlog::debug("Added \"{}\" to queue", link);
-        //         } else {
-        //             spdlog::debug("Blocked by robots.txt: \"{}\"", link);
-        //             visited_urls_.insert(link);
-        //         }
-        //     }
-        // }
+            auto links = krauler::extract_links(html);
+            for (const auto& link : links) {
+                // spdlog::debug("New link: {}", link);
+                std::string normalized_link = normalize_url(config_.url, link);
+                if (filter.is_allowed(normalized_link)) {
+                    url_queue_.push(normalized_link);
+                    spdlog::debug("Added \"{}\" to queue", normalized_link);
+                } else {
+                    visited_urls_.insert(normalized_link);
+                }
+            }
+        }
 
     } catch (const std::exception& e) {
         spdlog::error("Error: {}", e.what());

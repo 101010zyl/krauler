@@ -19,8 +19,8 @@ Robotstxt::Robotstxt(const std::string& url) : base_url_(url) {
 }
 
 std::string trim(const std::string& s) {
-    size_t start = s.find_first_not_of(" \t");
-    size_t end   = s.find_last_not_of(" \t");
+    size_t start = s.find_first_not_of(" \t\n\r");
+    size_t end   = s.find_last_not_of(" \t\n\r");
     return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
 }
 void Robotstxt::parse_robots(const std::string& robots_txt) {

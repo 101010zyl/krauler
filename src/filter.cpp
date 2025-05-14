@@ -97,6 +97,14 @@ bool Filter::is_allowed(const std::string& url) const {
         spdlog::debug("Filter: \"{}\" visited", url);
         return false;
     }
+    // regex check
+    for (const auto& regex : regexes_) {
+        std::regex pattern(regex);
+        if (std::regex_match(url, pattern)) {
+            spdlog::debug("Filter: \"{}\" matched regex \"{}\"", url, regex);
+            return false;
+        }
+    }
 
     return true;
 }
